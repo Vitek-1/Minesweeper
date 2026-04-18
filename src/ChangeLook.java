@@ -17,7 +17,7 @@ public class ChangeLook {
     }
 
     public static void setMinaIcon(JButton button, int width, int height) {
-        URL imgURL = ChangeLook.class.getResource("/Settings.jpg");
+        URL imgURL = ChangeLook.class.getResource("/Bomba.png");
 
         setButtonAsImg(button, imgURL, width, height);
 
@@ -25,7 +25,11 @@ public class ChangeLook {
         button.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 
+    public static void setFlagIcon(JButton button, int width, int height) {
+        URL imgURL = ChangeLook.class.getResource("/flag.png");
+        setButtonAsImg(button, imgURL, width, height);
 
+    }
 
     public static void setButtonAsImg(JButton button, URL imgURL, int width, int height) {
         if (imgURL != null) {
