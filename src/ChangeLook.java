@@ -18,8 +18,11 @@ public class ChangeLook {
 
     public static void setMinaIcon(JButton button, int width, int height) {
         URL imgURL = ChangeLook.class.getResource("/Bomba.png");
-
         setButtonAsImg(button, imgURL, width, height);
+
+        button.setBackground(new Color(194, 194, 194));
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
 
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
         button.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -29,6 +32,13 @@ public class ChangeLook {
         URL imgURL = ChangeLook.class.getResource("/flag.png");
         setButtonAsImg(button, imgURL, width, height);
 
+        button.setBackground(new Color(194, 194, 194));
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setRolloverEnabled(false);
     }
 
     public static void setButtonAsImg(JButton button, URL imgURL, int width, int height) {
