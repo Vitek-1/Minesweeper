@@ -20,7 +20,7 @@ public class ChangeLook {
         URL imgURL = ChangeLook.class.getResource("/Bomba.png");
         setButtonAsImg(button, imgURL, width, height);
 
-        button.setBackground(new Color(194, 194, 194));
+        button.setBackground(new Color(237, 28, 36));
         button.setContentAreaFilled(false);
         button.setOpaque(true);
 
@@ -32,7 +32,7 @@ public class ChangeLook {
         URL imgURL = ChangeLook.class.getResource("/flag.png");
         setButtonAsImg(button, imgURL, width, height);
 
-        button.setBackground(new Color(194, 194, 194));
+        button.setBackground(new Color(192, 192, 192));
         button.setContentAreaFilled(false);
         button.setOpaque(true);
 
