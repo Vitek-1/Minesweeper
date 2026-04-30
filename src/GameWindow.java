@@ -7,30 +7,29 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 
-public class GameWindow {
-    JFrame frame;
+public class GameWindow extends JFrame {
     private int[][] Miny = new int[9][9];
     private JButton[][] buttons;
     private JPanel topPanel;
     private JButton backButton;
     private int numberOfMins = 10;
-    private boolean Lost = false;
+    private boolean lost = false;
     private int seconsPassed = 0;
     private int minutesPassed = 0;
     private Timer timer;
     private JLabel timeLabel;
-    private Color grey = new Color(192,192,192);
+    private Color grey = new Color(192, 192, 192);
 
     public void StartGame() {
-        frame = new JFrame("Minesweeper");
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        new JFrame("Minesweeper");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
         topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(frame.getWidth(), 100));
+        topPanel.setPreferredSize(new Dimension(getWidth(), 100));
 
-        Border bottomLine =  BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black);
+        Border bottomLine = BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black);
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         topPanel.setBorder(BorderFactory.createCompoundBorder(bottomLine, padding));
 
@@ -49,11 +48,11 @@ public class GameWindow {
         topPanel.add(backButton, BorderLayout.EAST);
 
         backButton.addActionListener(e -> {
-            frame.dispose();
+            dispose();
             new HomeScreen().StartHomeScreen();
         });
 
-        frame.add(topPanel, BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setLayout(new GridLayout(9, 9, 2, 2));
@@ -69,43 +68,43 @@ public class GameWindow {
                 final int finalX = x;
                 final int finalY = y;
 
-                    buttons[x][y].addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
+                buttons[x][y].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
 
-                            if (Lost){
-                                return;
+                        if (lost) {
+                            return;
+                        }
+
+                        if (SwingUtilities.isLeftMouseButton(e)) {
+                            SetPicture(buttons[finalX][finalY], finalX, finalY);
+
+                            if (lost) {
+                                ShowAllMines(buttons[finalX][finalY]);
+                                timer.stop();
                             }
 
-                            if (SwingUtilities.isLeftMouseButton(e)) {
-                                SetPicture(buttons[finalX][finalY], finalX, finalY);
-
-                                if (Lost){
-                                    ShowAllMines(buttons[finalX][finalY]);
-                                    timer.stop();
-                                }
-
-                            } else if (SwingUtilities.isRightMouseButton(e)) {
-                                if (Miny[finalX][finalY] != 10) {
-                                    buttons[finalX][finalY].setText("");
-                                    ChangeLook.setFlagIcon(buttons[finalX][finalY], 100, 100);
-                                }
+                        } else if (SwingUtilities.isRightMouseButton(e)) {
+                            if (Miny[finalX][finalY] != 10) {
+                                buttons[finalX][finalY].setText("");
+                                ChangeLook.setFlagIcon(buttons[finalX][finalY], 100, 100);
                             }
                         }
-                    });
+                    }
+                });
                 buttons[x][y].setCursor(new Cursor(Cursor.HAND_CURSOR));
                 buttons[x][y].setBorderPainted(false);
                 buttons[x][y].setFocusPainted(false);
                 buttonPanel.add(buttons[x][y]);
             }
         }
-        frame.add(buttonPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.CENTER);
 
         MineGenerator();
         CalculateMines();
 
-        frame.setVisible(true);
-     }
+        setVisible(true);
+    }
 
     public void StartTimer() {
         timer = new Timer(1000, new ActionListener() {
@@ -182,15 +181,15 @@ public class GameWindow {
             button.setFocusPainted(false);
 
             if (number == 0) {
-                ShowVicinity(x,y);
+                ShowVicinity(x, y);
             }
         } else if (Miny[x][y] == 9) {
             ChangeLook.setMinaIcon(button, 100, 100);
-            Lost = true;
+            lost = true;
         }
     }
 
-    public void ShowAllMines(JButton button){
+    public void ShowAllMines(JButton button) {
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (Miny[x][y] == 9) {
@@ -213,13 +212,13 @@ public class GameWindow {
         topPanel.add(spacer, BorderLayout.WEST);
     }
 
-    public void ShowVicinity(int x, int y){
+    public void ShowVicinity(int x, int y) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 int neighbourX = x + i;
                 int neighbourY = y + j;
 
-                if (neighbourX >= 0 && neighbourY >= 0 && neighbourX < 9 && neighbourY < 9){
+                if (neighbourX >= 0 && neighbourY >= 0 && neighbourX < 9 && neighbourY < 9) {
                     if (Miny[neighbourX][neighbourY] != 10) {
                         SetPicture(buttons[neighbourX][neighbourY], neighbourX, neighbourY);
                         if (Miny[neighbourX][neighbourY] == 0) {
