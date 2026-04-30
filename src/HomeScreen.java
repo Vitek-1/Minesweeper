@@ -14,10 +14,10 @@ public class HomeScreen {
         JButton play = new JButton("Play");
         ChangeLook.changeGreen(play);
 
-        play.setPreferredSize(new Dimension(200,100));
+        play.setPreferredSize(new Dimension(200, 100));
 
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(1000,250));
+        panel.setPreferredSize(new Dimension(1000, 250));
         panel.setOpaque(false);
         panel.add(play);
         frame.add(panel, BorderLayout.SOUTH);
@@ -28,16 +28,16 @@ public class HomeScreen {
         });
 
         JButton settings = new JButton("");
-        ChangeLook.setMinaIcon(settings,100,100);
+        ChangeLook.SetSettingsIcon(settings, 100, 100);
 
-        JPanel panel2 = new JPanel(new  FlowLayout(FlowLayout.RIGHT));
-        panel2.setPreferredSize(new Dimension(1000,120));
+        JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel2.setPreferredSize(new Dimension(1000, 120));
         panel2.setOpaque(false);
         panel2.setBackground(Color.white);
         panel2.add(settings);
         frame.add(panel2, BorderLayout.NORTH);
 
-        settings.addActionListener(e ->{
+        settings.addActionListener(e -> {
             this.frame.dispose();
         });
 
