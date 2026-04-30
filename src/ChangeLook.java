@@ -8,7 +8,7 @@ public class ChangeLook {
         button.setBackground(new Color(40, 255, 25));
         button.setForeground(Color.BLACK);
 
-        button.setFont(new Font("Times new Roman", Font.BOLD, 50 )); // Font 50 je pro hlavní tlačítko ideální!
+        button.setFont(new Font("Times new Roman", Font.BOLD, 50)); // Font 50 je pro hlavní tlačítko ideální!
 
         button.setFocusPainted(false);
         button.setBorderPainted(false);
@@ -23,9 +23,6 @@ public class ChangeLook {
         button.setBackground(new Color(237, 28, 36));
         button.setContentAreaFilled(false);
         button.setOpaque(true);
-
-        button.setVerticalTextPosition(SwingConstants.BOTTOM);
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 
     public static void setFlagIcon(JButton button, int width, int height) {
@@ -39,6 +36,17 @@ public class ChangeLook {
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setRolloverEnabled(false);
+    }
+
+    public static void SetSettingsIcon(JButton button, int width, int height) {
+        URL imgURL = ChangeLook.class.getResource("/Settings.jpg");
+        setButtonAsImg(button, imgURL, width, height);
+        button.setBackground(new Color(192, 192, 192));
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
     }
 
     public static void setButtonAsImg(JButton button, URL imgURL, int width, int height) {
@@ -55,7 +63,6 @@ public class ChangeLook {
             System.out.println("Image not found");
         }
     }
-
 
 
     public static void changeViolet(JButton button) {
