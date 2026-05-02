@@ -5,20 +5,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Random;
 
 public class GameWindow extends JFrame {
-    private int[][] Miny = new int[9][9];
+    private int[][] miny = new int[9][9];
     private JButton[][] buttons;
     private JPanel topPanel;
     private JButton backButton;
-    private int numberOfMins = 10;
+    private int numberOfMins = 15;
     private boolean lost = false;
     private int seconsPassed = 0;
     private int minutesPassed = 0;
     private Timer timer;
     private JLabel timeLabel;
-    private Color grey = new Color(192, 192, 192);
+    private final Color grey = new Color(192, 192, 192);
+    private GameMechanic mechanic;
 
     public void StartGame() {
         new JFrame("Minesweeper");
@@ -36,7 +36,6 @@ public class GameWindow extends JFrame {
         timeLabel = new JLabel("00:00", SwingConstants.CENTER);
         timeLabel.setFont(new Font("Monospaced", Font.BOLD, 50));
         topPanel.add(timeLabel, BorderLayout.CENTER);
-        StartTimer();
 
         backButton = new JButton("Back to menu");
         backButton.setFont(new Font("Times new Remains", Font.BOLD, 50));
@@ -77,15 +76,16 @@ public class GameWindow extends JFrame {
                         }
 
                         if (SwingUtilities.isLeftMouseButton(e)) {
-                            SetPicture(buttons[finalX][finalY], finalX, finalY);
+                            mechanic.SetPicture(buttons[finalX][finalY], finalX, finalY);
+                            lost = mechanic.isLost();
 
                             if (lost) {
-                                ShowAllMines(buttons[finalX][finalY]);
-                                timer.stop();
+                                mechanic.ShowAllMines(buttons[finalX][finalY]);
+                                mechanic.timer.stop();
                             }
 
                         } else if (SwingUtilities.isRightMouseButton(e)) {
-                            if (Miny[finalX][finalY] != 10) {
+                            if (miny[finalX][finalY] != 10) {
                                 buttons[finalX][finalY].setText("");
                                 ChangeLook.setFlagIcon(buttons[finalX][finalY], 100, 100);
                             }
@@ -99,134 +99,12 @@ public class GameWindow extends JFrame {
             }
         }
         add(buttonPanel, BorderLayout.CENTER);
+        mechanic = new GameMechanic(miny, buttons, grey, lost, backButton, topPanel, numberOfMins, seconsPassed, minutesPassed, timer, timeLabel);
 
-        MineGenerator();
-        CalculateMines();
+        mechanic.StartTimer();
+        mechanic.MineGenerator();
+        mechanic.CalculateMines();
 
         setVisible(true);
-    }
-
-    public void StartTimer() {
-        timer = new Timer(1000, new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                seconsPassed++;
-                if (seconsPassed == 60) {
-                    seconsPassed = 0;
-                    minutesPassed++;
-                }
-                timeLabel.setText(String.format("%02d:%02d", minutesPassed, seconsPassed));
-                timeLabel.setFont(new Font("Monospaced", Font.BOLD, 50));
-            }
-        });
-        timer.start();
-    }
-
-    public void MineGenerator() {
-        Random rnd = new Random();
-        int laidMines = 0;
-
-        while (laidMines < numberOfMins) {
-            int x = rnd.nextInt(9);
-            int y = rnd.nextInt(9);
-
-            if (Miny[x][y] != 9) {
-                Miny[x][y] = 9;
-                laidMines++;
-            }
-        }
-    }
-
-    public void CalculateMines() {
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                if (Miny[x][y] != 9) {
-
-                    int neighbour = 0;
-
-                    for (int i = -1; i <= 1; i++) {
-                        for (int j = -1; j <= 1; j++) {
-                            int neighbourX = x + i;
-                            int neighbourY = y + j;
-
-                            if (neighbourX >= 0 && neighbourY >= 0 && neighbourX < 9 && neighbourY < 9) {
-                                if (Miny[neighbourX][neighbourY] == 9) {
-                                    neighbour++;
-                                }
-                            }
-                        }
-                    }
-                    Miny[x][y] = neighbour;
-                }
-            }
-        }
-    }
-
-    public void SetPicture(JButton button, int x, int y) {
-        if (Miny[x][y] != 9 && Miny[x][y] != 10) {
-            int number = Miny[x][y];
-
-            button.setIcon(null);
-            button.setText(String.valueOf(Miny[x][y]));
-            button.setFont(new Font("Times New Roman", Font.BOLD, 45));
-            Miny[x][y] = 10;
-
-            button.setBackground(grey);
-            button.setContentAreaFilled(false);
-            button.setOpaque(true);
-            button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-            button.setBorderPainted(false);
-            button.setFocusPainted(false);
-
-            if (number == 0) {
-                ShowVicinity(x, y);
-            }
-        } else if (Miny[x][y] == 9) {
-            ChangeLook.setMinaIcon(button, 100, 100);
-            lost = true;
-        }
-    }
-
-    public void ShowAllMines(JButton button) {
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                if (Miny[x][y] == 9) {
-                    ChangeLook.setMinaIcon(buttons[x][y], 100, 100);
-                    buttons[x][y].setBackground(new Color(237, 28, 36));
-                } else {
-                    buttons[x][y].setBackground(grey);
-                }
-                buttons[x][y].setContentAreaFilled(false);
-                buttons[x][y].setOpaque(true);
-                buttons[x][y].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-                buttons[x][y].setBorderPainted(false);
-                buttons[x][y].setFocusPainted(false);
-            }
-        }
-        backButton.setVisible(true);
-        JLabel spacer = new JLabel();
-        spacer.setPreferredSize(backButton.getPreferredSize());
-        topPanel.add(spacer, BorderLayout.WEST);
-    }
-
-    public void ShowVicinity(int x, int y) {
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                int neighbourX = x + i;
-                int neighbourY = y + j;
-
-                if (neighbourX >= 0 && neighbourY >= 0 && neighbourX < 9 && neighbourY < 9) {
-                    if (Miny[neighbourX][neighbourY] != 10) {
-                        SetPicture(buttons[neighbourX][neighbourY], neighbourX, neighbourY);
-                        if (Miny[neighbourX][neighbourY] == 0) {
-                            ShowVicinity(neighbourX, neighbourY);
-                        }
-                    }
-                }
-            }
-        }
     }
 }
