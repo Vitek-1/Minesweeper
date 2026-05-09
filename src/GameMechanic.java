@@ -159,4 +159,27 @@ public class GameMechanic {
         });
         timer.start();
     }
+
+    public boolean Victory(){
+        for (int x = 0; x < miny.length; x++) {
+            for (int y = 0; y < miny.length; y++) {
+                int value = miny[x][y];
+                JButton button = buttons[x][y];
+
+                if (value == 9) {
+                    if (button.getIcon() == null) {
+                        return false;
+                    }
+                } else if (value != 10) {
+                    return false;
+                }
+            }
+            
+        }
+        backButton.setVisible(true);
+        JLabel spacer = new JLabel();
+        spacer.setPreferredSize(backButton.getPreferredSize());
+        topPanel.add(spacer, BorderLayout.WEST);
+        return true;
+    }
 }
