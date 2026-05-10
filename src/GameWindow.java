@@ -1,8 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -11,12 +9,13 @@ public class GameWindow extends JFrame {
     private JButton[][] buttons;
     private JPanel topPanel;
     private JButton backButton;
-    private int numberOfMins = 15;
+    private int numberOfMins = 1;
     private boolean lost = false;
     private int seconsPassed = 0;
     private int minutesPassed = 0;
     private Timer timer;
     private JLabel timeLabel;
+    private boolean nameEntered =  false;
     private final Color grey = new Color(192, 192, 192);
     private GameMechanic mechanic;
 
@@ -25,9 +24,10 @@ public class GameWindow extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        setVisible(true);
 
         topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(getWidth(), 100));
+        topPanel.setPreferredSize(new Dimension(getWidth(), getHeight()/10));
 
         Border bottomLine = BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black);
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -38,7 +38,7 @@ public class GameWindow extends JFrame {
         topPanel.add(timeLabel, BorderLayout.CENTER);
 
         backButton = new JButton("Back to menu");
-        backButton.setFont(new Font("Times new Remains", Font.BOLD, 50));
+        backButton.setFont(new Font("Times New Roman", Font.BOLD, 50));
         backButton.setBackground(grey);
         backButton.setFocusPainted(false);
         backButton.setContentAreaFilled(true);
@@ -71,7 +71,7 @@ public class GameWindow extends JFrame {
                     @Override
                     public void mouseClicked(MouseEvent e) {
 
-                        if (lost) {
+                        if (lost || nameEntered) {
                             return;
                         }
 
@@ -90,6 +90,15 @@ public class GameWindow extends JFrame {
                                 ChangeLook.setFlagIcon(buttons[finalX][finalY], 100, 100);
                             }
                         }
+
+                        if (mechanic.Victory() && !lost &&  !nameEntered){
+                            System.out.println("Victory");
+                            mechanic.timer.stop();
+                            new EndingWindow(mechanic.getMinutesPassed(), mechanic.getSeconsPassed()).TheEnd();
+                            nameEntered = true;
+                            LeaderboardWindow l = new LeaderboardWindow();
+                            l.setVisible(true);
+                        }
                     }
                 });
                 buttons[x][y].setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -104,7 +113,5 @@ public class GameWindow extends JFrame {
         mechanic.StartTimer();
         mechanic.MineGenerator();
         mechanic.CalculateMines();
-
-        setVisible(true);
     }
 }
