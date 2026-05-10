@@ -6,8 +6,14 @@ import java.awt.event.KeyEvent;
 
 public class EndingWindow extends JDialog {
 
-    private boolean finished = false;
     private String playersName = "";
+    private int finalMin;
+    private int finalSec;
+
+    public EndingWindow(int finalMin, int finalSec) {
+        this.finalMin = finalMin;
+        this.finalSec = finalSec;
+    }
 
     public void TheEnd() {
         setTitle("You won the game!");
@@ -57,22 +63,17 @@ public class EndingWindow extends JDialog {
     }
 
     public void Clicked(JTextField messageText) {
-        String name = messageText.getText();
-        if (name.isBlank()) {
+        playersName = messageText.getText();
+        if (playersName.isBlank()) {
             JOptionPane.showMessageDialog(this, "Please enter your name!");
             messageText.setText("");
-        } else {
-            finished = true;
-            playersName = name;
+        } else if (playersName.contains(";")) {
+            JOptionPane.showMessageDialog(this, "You can't use {;}");
+            messageText.setText("");
+        }else{
+            int totalS = finalMin*60 + finalSec;
+            new Player(playersName, totalS, String.format("%02d:%02d", finalMin, finalSec)).UpdateLeaderBoard(finalMin, finalSec);
             dispose();
         }
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public String getPlayersName() {
-        return playersName;
     }
 }
