@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 public class GameMechanic {
@@ -174,12 +176,20 @@ public class GameMechanic {
                     return false;
                 }
             }
-            
+
         }
         backButton.setVisible(true);
         JLabel spacer = new JLabel();
         spacer.setPreferredSize(backButton.getPreferredSize());
         topPanel.add(spacer, BorderLayout.WEST);
         return true;
+    }
+
+    public int getSeconsPassed() {
+        return seconsPassed;
+    }
+
+    public int getMinutesPassed() {
+        return minutesPassed;
     }
 }
