@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
@@ -32,6 +33,9 @@ public class GameMechanic {
         this.minutesPassed = minutesPassed;
         this.timer = timer;
         this.timeLabel = timeLabel;
+    }
+
+    public GameMechanic() {
     }
 
     public void ShowVicinity(int x, int y) {
@@ -99,10 +103,7 @@ public class GameMechanic {
                 buttons[x][y].setFocusPainted(false);
             }
         }
-        backButton.setVisible(true);
-        JLabel spacer = new JLabel();
-        spacer.setPreferredSize(backButton.getPreferredSize());
-        topPanel.add(spacer, BorderLayout.WEST);
+        End();
     }
 
     public void CalculateMines() {
@@ -156,7 +157,7 @@ public class GameMechanic {
                     minutesPassed++;
                 }
                 timeLabel.setText(String.format("%02d:%02d", minutesPassed, seconsPassed));
-                timeLabel.setFont(new Font("Monospaced", Font.BOLD, 50));
+                timeLabel.setFont(new Font("Arial", Font.BOLD, 50));
             }
         });
         timer.start();
@@ -168,21 +169,68 @@ public class GameMechanic {
                 int value = miny[x][y];
                 JButton button = buttons[x][y];
 
-                if (value == 9) {
-                    if (button.getIcon() == null) {
+                if (value != 9) {
+                    if (value != 10) {
                         return false;
                     }
-                } else if (value != 10) {
-                    return false;
                 }
             }
 
         }
+        End();
+        return true;
+    }
+
+    public boolean FastEnough(){
+        String filename = "res/LeaderBoard.csv";
+        int count = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))){
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] pole = line.split(";");
+                String[] time = pole[1].split(":");
+
+                if (Integer.parseInt(time[0])*60 + Integer.parseInt(time[1]) > getMinutesPassed()*60 + getSeconsPassed()){
+                    return true;
+                }
+                count++;
+            }
+
+            if (count < 10){
+                return true;
+            }
+        } catch (IOException e) {
+            System.out.println("Tabulka výsledků zatím neexistuje");
+        }
+        return false;
+    }
+
+    public boolean NameExists(String name){
+        String filename = "res/LeaderBoard.csv";
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))){
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] pole = line.split(";");
+
+                if (pole[0].equals(name)) {
+                    return true;
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Tabulka výsledků zatím neexistuje");
+        }
+        return false;
+    }
+
+    public void End(){
         backButton.setVisible(true);
         JLabel spacer = new JLabel();
         spacer.setPreferredSize(backButton.getPreferredSize());
         topPanel.add(spacer, BorderLayout.WEST);
-        return true;
     }
 
     public int getSeconsPassed() {
