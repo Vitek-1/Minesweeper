@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -41,6 +43,14 @@ public class LeaderboardWindow extends JDialog {
 
         add(eastPanel, BorderLayout.EAST);
         add(southPanel, BorderLayout.WEST);
+
+        addKeyListener(new  KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    dispose();
+                }
+            }
+        });
 
         setVisible(true);
     }
