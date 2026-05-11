@@ -15,7 +15,7 @@ public class GameWindow extends JFrame {
     private int minutesPassed = 0;
     private Timer timer;
     private JLabel timeLabel;
-    private boolean nameEntered =  false;
+    private boolean nameEntered = false;
     private final Color grey = new Color(192, 192, 192);
     private GameMechanic mechanic;
 
@@ -27,7 +27,7 @@ public class GameWindow extends JFrame {
         setVisible(true);
 
         topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(getWidth(), getHeight()/10));
+        topPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 10));
 
         Border bottomLine = BorderFactory.createMatteBorder(0, 0, 2, 0, Color.black);
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -91,13 +91,14 @@ public class GameWindow extends JFrame {
                             }
                         }
 
-                        if (mechanic.Victory() && !lost &&  !nameEntered){
-                            System.out.println("Victory");
+                        if (mechanic.Victory() && !lost && !nameEntered) {
                             mechanic.timer.stop();
-                            new EndingWindow(mechanic.getMinutesPassed(), mechanic.getSeconsPassed()).TheEnd();
-                            nameEntered = true;
+                            if (mechanic.FastEnough()) {
+                                new EndingWindow(mechanic.getMinutesPassed(), mechanic.getSeconsPassed()).TheEnd();
+                            }
                             LeaderboardWindow l = new LeaderboardWindow();
                             l.setVisible(true);
+                            nameEntered = true;
                         }
                     }
                 });
