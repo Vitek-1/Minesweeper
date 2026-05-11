@@ -39,9 +39,9 @@ public class ChangeLook {
     }
 
     public static void SetSettingsIcon(JButton button, int width, int height) {
-        URL imgURL = ChangeLook.class.getResource("/Settings.jpg");
+        URL imgURL = ChangeLook.class.getResource("/Settings.png");
         setButtonAsImg(button, imgURL, width, height);
-        button.setBackground(new Color(192, 192, 192));
+        button.setBackground(new Color(182, 181, 181));
         button.setContentAreaFilled(false);
         button.setOpaque(true);
 
