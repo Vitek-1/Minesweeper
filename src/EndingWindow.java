@@ -9,6 +9,7 @@ public class EndingWindow extends JDialog {
     private String playersName = "";
     private int finalMin;
     private int finalSec;
+    private GameMechanic mechanic;
 
     public EndingWindow(int finalMin, int finalSec) {
         this.finalMin = finalMin;
@@ -67,8 +68,11 @@ public class EndingWindow extends JDialog {
         if (playersName.isBlank()) {
             JOptionPane.showMessageDialog(this, "Please enter your name!");
             messageText.setText("");
-        } else if (playersName.contains(";")) {
-            JOptionPane.showMessageDialog(this, "You can't use {;}");
+        } else if (playersName.contains(";") || playersName.contains(":")) {
+            JOptionPane.showMessageDialog(this, "You can't use {; and :}");
+            messageText.setText("");
+        }else if (new GameMechanic().NameExists(playersName)) {
+            JOptionPane.showMessageDialog(this, "Yours name is already used!");
             messageText.setText("");
         }else{
             int totalS = finalMin*60 + finalSec;
